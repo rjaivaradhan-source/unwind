@@ -17,6 +17,7 @@ On Windows, use the installer in `release/` or the portable executable. For an i
 - Import a PNG, JPEG, or WebP up to 20 MB to play with a local copy. Nothing is uploaded or overwritten.
 - Fourteen tools: hammer, laser, paintball gun, gravity, chainsaw, machine gun, flamethrower, stamp, termites, Restore Potion, baseball bat, grenade, slap, and punch. Click or hold and drag.
 - Fullscreen now targets the whole playground so scene tabs, all tools, intensity, and Fresh start remain available around the expanded canvas.
+- Installed builds use Electron's native window fullscreen API and keep the playground layout synchronized when entering, leaving, or pressing Escape. Browser previews retain the standard Fullscreen API fallback.
 - Chainsaw cuts a continuous diagonal line through the entire playground surface and releases every fragment intersecting that edge-to-edge path.
 - Light and dark modes can be switched from the top header and remain available in fullscreen; the choice is stored locally and restored at the next launch.
 - The realistic character cutout now receives stronger white/checker background cleanup. Any tool other than Slap or Punch makes the character run and fully vanish before returning after play stops.
@@ -24,6 +25,7 @@ On Windows, use the installer in `release/` or the portable executable. For an i
 - Bubble Wrap is endless: popped bubbles reform automatically after 1.2–3.2 seconds, while the cumulative pop counter continues beyond 1,000.
 - Text contrast is strengthened across light and dark modes. Workday capture copy, privacy guidance, stage labels, instructions, counters, inactive controls, and footer text use higher-contrast colours or translucent backplates where the canvas can vary.
 - Hammer now uses the supplied high-detail electric fantasy hammer artwork as a cleaned local cursor asset. The head is aligned to the impact point, with a heavier swing, blue electrical glow/arcs, shock rings, and matching blue debris particles.
+- Gravity uses the supplied glowing energy orb artwork with a rotating ring field, cyan bloom, orbiting particles, and responsive pull animation.
 - All active cursors use lightweight procedural 3D-style models with top/side faces, material gradients, highlights, contact shadows, and animated moving parts. The raised tool-tray buttons use matching depth and pressed states.
 - The flamethrower shows a live flame cone, glowing flame particles, embers, scorch marks, and smoke-darkened areas. The Restore Potion shows animated water jets, blue droplets, splash rings, and repairs the surface beneath the spray.
 - The 3D baseball bat uses a broad swing arc, wood impact sound, stronger impulse, and wide debris throw. The 3D grenade bounces with a 1.45-second fuse before producing layered blast audio, a flash, shock rings, fire, smoke, a crater, and radial fragment physics. At most eight grenades can exist at once.

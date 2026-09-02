@@ -3,6 +3,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const smokeDir = process.env.UNWIND_SMOKE_DIR;
 if (smokeDir) app.setPath('userData', path.resolve(smokeDir, 'profile'));
+if (smokeDir) app.disableHardwareAcceleration();
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -14,7 +15,10 @@ function createWindow() {
     webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, preload: path.join(__dirname, 'preload.cjs') }
   });
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-  win.webContents.on('will-navigate', (event) => event.preventDefault());
+  win.on('enter-full-screen',()=>win.webContents.send('unwind:fullscreen-changed',true));
+  win.on('leave-full-screen',()=>win.webContents.send('unwind:fullscreen-changed',false));
+  const allowedPages=new Set(['index.html','about.html'].map(file=>require('node:url').pathToFileURL(path.join(__dirname,'..',file)).href));
+  win.webContents.on('will-navigate', (event, url) => {if(!allowedPages.has(url))event.preventDefault();});
   win.webContents.session.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false));
   if (smokeDir) {
     const failures = [];
@@ -22,10 +26,13 @@ function createWindow() {
     win.webContents.on('did-fail-load', (_event, code, description) => { failures.push({ code, description }); });
     win.webContents.once('did-finish-load', async () => {
       await new Promise(resolve => setTimeout(resolve, 1200));
+      let fullscreenWorked=false;
+      try{await win.webContents.executeJavaScript('window.unwindDesktop.toggleFullscreen()');await new Promise(resolve=>setTimeout(resolve,350));fullscreenWorked=win.isFullScreen();if(fullscreenWorked){win.setFullScreen(false);await new Promise(resolve=>setTimeout(resolve,250));}}catch(error){failures.push(`Fullscreen smoke test: ${error.message}`);}
+      if(!fullscreenWorked)failures.push('Fullscreen smoke test did not enter native fullscreen.');
       fs.mkdirSync(smokeDir, { recursive: true });
       const preview = await win.webContents.capturePage();
       fs.writeFileSync(path.join(smokeDir, 'desktop-preview.png'), preview.toPNG());
-      fs.writeFileSync(path.join(smokeDir, 'startup.json'), JSON.stringify({ title: win.getTitle(), failures, electron: process.versions.electron, platform: process.platform }, null, 2));
+      fs.writeFileSync(path.join(smokeDir, 'startup.json'), JSON.stringify({ title: win.getTitle(), failures, fullscreenWorked, electron: process.versions.electron, platform: process.platform }, null, 2));
       app.exit(failures.length ? 1 : 0);
     });
   }
@@ -57,6 +64,11 @@ app.whenReady().then(() => {
       return {ok:true,image:source.thumbnail.toDataURL()};
     }catch(error){return {ok:false,message:error.message};}
     finally{captureBusy=false;if(!win.isDestroyed()){win.restore();win.show();win.focus();}}
+  });
+  ipcMain.handle('unwind:toggle-fullscreen',event=>{
+    const win=trustedWindow(event),next=!win.isFullScreen();
+    win.setFullScreen(next);
+    return next;
   });
   Menu.setApplicationMenu(process.platform === 'darwin' ? Menu.buildFromTemplate([
     { label: 'Unwind', submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },

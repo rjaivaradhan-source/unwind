@@ -14,6 +14,7 @@ FILES = [
     "termite-box-realistic.png", "washer-blaster.png",
     "baseball-bat-realistic.png", "grenade-realistic.png",
     "slap-hand-realistic.png", "boxing-gloves-realistic.png",
+    "gravity-orb.png",
 ]
 
 def clear_connected_light_background(image: Image.Image) -> Image.Image:

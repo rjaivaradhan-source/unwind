@@ -65,4 +65,8 @@ Windows x64 NSIS installer and portable EXE were successfully built with Electro
 
 The unpacked Windows app did not start successfully in the Codex execution environment. Electron reports GPU and renderer process launch failures with child exit code `-1073741515` and final exit `-2147483645`. Disabling GPU acceleration for a diagnostic run did not resolve it. The packaged DLL set matches the downloaded Electron archive, but the exact cause has not been established. Do not call native startup, installation, or uninstallation verified. The installer should receive an ordinary desktop smoke test before public release.
 
+## 1.4.1 fullscreen and Gravity update
+
+The installed app fullscreen control now invokes Electron's native `BrowserWindow.setFullScreen()` through a context-isolated preload bridge. Enter/leave events synchronize the fullscreen playground class and controls, including Escape-based exit. Browser builds keep the element Fullscreen API fallback. JavaScript validation passes. Native smoke execution remains blocked in this sandbox by the GPU process failure documented above, so the packaged build should be exercised on a normal Windows desktop. Gravity now uses the supplied energy-orb image with runtime background cleanup, responsive sizing, rotating energy rings, glow, and orbiting particles.
+
 macOS DMG generation is configured, but has not been built or tested on this Windows host. macOS signing/notarization and Windows trusted signing remain outstanding for public distribution.
