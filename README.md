@@ -18,6 +18,7 @@ On Windows, use the installer in `release/` or the portable executable. For an i
 - Fourteen tools: hammer, laser, paintball gun, gravity, chainsaw, machine gun, flamethrower, stamp, termites, Restore Potion, baseball bat, grenade, slap, and punch. Click or hold and drag.
 - Fullscreen now targets the whole playground so scene tabs, all tools, intensity, and Fresh start remain available around the expanded canvas.
 - Installed builds use Electron's native window fullscreen API and keep the playground layout synchronized when entering, leaving, or pressing Escape. Browser previews retain the standard Fullscreen API fallback.
+- Installed NSIS builds check the official GitHub Releases feed after launch and every four hours. The Updates button lets players check manually, choose when to download, watch progress, and choose when to restart and install. Updates are never installed without that final user action.
 - Chainsaw cuts a continuous diagonal line through the entire playground surface and releases every fragment intersecting that edge-to-edge path.
 - Light and dark modes can be switched from the top header and remain available in fullscreen; the choice is stored locally and restored at the next launch.
 - The realistic character cutout now receives stronger white/checker background cleanup. Any tool other than Slap or Punch makes the character run and fully vanish before returning after play stops.
@@ -62,6 +63,18 @@ Windows x64: `npm run build:win` produces an NSIS installer and portable executa
 On a Mac: `npm ci`, then `npm run build:mac`. Build and test on the intended Apple Silicon / Intel architecture. DMG packaging is configured but is not verified by the Windows build. For a public macOS release, obtain Apple signing credentials and notarize the build. Windows public distribution also needs a trusted code-signing certificate to reduce security warnings. No signing credentials are included.
 
 The current Windows artifacts are unsigned development builds. Do not describe them as a signed or store-approved release.
+
+## Publish an update
+
+Installed app updates are delivered through GitHub Releases rather than by pulling the source repository. Update `package.json` to a higher semantic version, commit the change, then create and push a matching tag:
+
+```sh
+git tag v1.5.0
+git push origin main
+git push origin v1.5.0
+```
+
+The included GitHub Actions workflow builds the Windows NSIS installer and uploads the installer, block map, and `latest.yml` update metadata to that release. All three files must remain attached to the release. Automatic updates apply to the installed NSIS edition; portable builds should be replaced manually.
 
 ## Next: HD upgrade
 

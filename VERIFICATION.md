@@ -69,4 +69,8 @@ The unpacked Windows app did not start successfully in the Codex execution envir
 
 The installed app fullscreen control now invokes Electron's native `BrowserWindow.setFullScreen()` through a context-isolated preload bridge. Enter/leave events synchronize the fullscreen playground class and controls, including Escape-based exit. Browser builds keep the element Fullscreen API fallback. JavaScript validation passes. Native smoke execution remains blocked in this sandbox by the GPU process failure documented above, so the packaged build should be exercised on a normal Windows desktop. Gravity now uses the supplied energy-orb image with runtime background cleanup, responsive sizing, rotating energy rings, glow, and orbiting particles.
 
+## 1.5.0 opt-in updater
+
+The installed NSIS build uses `electron-updater` with the public `rjaivaradhan-source/unwind` GitHub Releases provider. Automatic downloading and automatic installation are disabled. The app checks after launch and every four hours, reports availability through the Updates button and an in-app notification, and requires separate user actions to download and restart/install. The release workflow publishes the installer, block map, and `latest.yml` metadata on `v*` tags. Browser previews report that updating is available only in installed builds. Portable builds remain manual updates.
+
 macOS DMG generation is configured, but has not been built or tested on this Windows host. macOS signing/notarization and Windows trusted signing remain outstanding for public distribution.

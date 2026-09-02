@@ -1,6 +1,6 @@
 {
   "name": "unwind-playground",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "A free, private desktop playground. Make a mess. Feel a little lighter.",
   "main": "desktop/main.cjs",
   "license": "MIT",
@@ -19,6 +19,14 @@
     "directories": {
       "output": "release"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "rjaivaradhan-source",
+        "repo": "unwind",
+        "releaseType": "release"
+      }
+    ],
     "files": [
       "index.html",
       "about.html",
@@ -38,9 +46,13 @@
       ]
     },
     "nsis": {
+      "artifactName": "Unwind-Setup-${version}.${ext}",
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true
+    },
+    "portable": {
+      "artifactName": "Unwind-Portable-${version}.${ext}"
     },
     "mac": {
       "icon": "assets/icon.png",
@@ -51,5 +63,8 @@
   "devDependencies": {
     "electron": "^44.1.0",
     "electron-builder": "^26.15.3"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
   }
 }
