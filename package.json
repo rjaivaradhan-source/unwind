@@ -1,0 +1,55 @@
+{
+  "name": "unwind-playground",
+  "version": "1.4.0",
+  "description": "A free, private desktop playground. Make a mess. Feel a little lighter.",
+  "main": "desktop/main.cjs",
+  "license": "MIT",
+  "author": "Vivek",
+  "private": false,
+  "scripts": {
+    "start": "electron .",
+    "preview": "node scripts/serve.cjs",
+    "check": "node --check app.js && node --check desktop/main.cjs && node --check scripts/serve.cjs",
+    "build:win": "electron-builder --win nsis portable",
+    "build:mac": "electron-builder --mac dmg"
+  },
+  "build": {
+    "appId": "studio.unwind.playground",
+    "productName": "Unwind",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "index.html",
+      "about.html",
+      "style.css",
+      "app.js",
+      "desktop/**",
+      "assets/**",
+      "package.json",
+      "LICENSE",
+      "README.md"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "mac": {
+      "icon": "assets/icon.png",
+      "target": "dmg",
+      "category": "public.app-category.games"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.1.0",
+    "electron-builder": "^26.15.3"
+  }
+}

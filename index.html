@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <meta name="theme-color" content="#f4f5ef">
+  <title>Unwind — a little room to let go</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m14 11-9 10-3-3 10-9m-3-5 4-3 8 8-3 4-4-4-2 2-4-4z"/></symbol>
+    <symbol id="i-laser" viewBox="0 0 24 24"><path d="m4 20 9-9m-6 9-3-3m7-4 2 2 4-4-4-4-4 4 2 2M17 2v3m5 2-3 1m2 7-3-2M8 3l2 3"/></symbol>
+    <symbol id="i-paint" viewBox="0 0 24 24"><path d="m9 14 9-11 3 3-11 9M9 14c-6-2-2 6-7 7 5 1 11-1 8-6"/></symbol>
+    <symbol id="i-vortex" viewBox="0 0 24 24"><path d="M12 12c4-5 9 1 5 5-6 6-15-1-12-8 4-10 19-5 17 5M11 9c-4 1-4 6 0 7"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="M11 4 5 9H2v6h3l6 5zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M4 20 17 7M6 17C-2 4 14 3 21 3c0 14-8 20-15 14Z"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 16 5-5 5 5 3-3 5 5"/><circle cx="16" cy="8" r="1"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+  </defs></svg>
+  <svg class="svg-defs" aria-hidden="true"><defs>
+    <symbol id="i-saw" viewBox="0 0 24 24"><rect x="1" y="12" width="10" height="9" rx="2"/><path d="M4 12V8h5v4m1 2L18 3q4-2 4 3l-11 13M14 11l2 2m0-5 2 2m0-5 2 2"/></symbol>
+    <symbol id="i-gun" viewBox="0 0 24 24"><path d="M2 7h14v6H7l-2 7H2l2-10M16 9h6m-11 4 2 6h4l-3-6M7 5h5"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 2c3 7-3 7 2 10 2-1 3-3 3-5 9 12-1 18-8 14C0 16 7 10 8 7c0 5 4 5 4-5Z"/></symbol>
+    <symbol id="i-stamp" viewBox="0 0 24 24"><path d="M8 14v-3c-7-12 15-12 8 0v3l5 3v4H3v-4zM3 17h18"/></symbol>
+    <symbol id="i-bug" viewBox="0 0 24 24"><ellipse cx="12" cy="14" rx="4" ry="7"/><path d="m9 8-3-4m9 4 3-4M8 11H3m13 0h5M8 15H2m14 0h6M8 19l-4 3m12-3 4 3M12 8v13"/></symbol>
+    <symbol id="i-wash" viewBox="0 0 24 24"><path d="M3 7h10v5H7L5 22H1l3-12M13 9h3m3-4 3-2m-3 6h4m-4 4 3 3M6 7V3h4v4"/></symbol>
+    <symbol id="i-bat" viewBox="0 0 24 24"><path d="M18 2c3 1 4 3 3 6L10 19l-3-3L17 4m-7 15-3 3-5-5 3-3z"/></symbol>
+    <symbol id="i-grenade" viewBox="0 0 24 24"><path d="M8 8h8l3 4v6l-4 4H9l-4-4v-6zM9 8V5h6v3m0-4 4-2 2 2-3 3m-9 5 8 8m0-8-8 8M7 16h12"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M5 12V5c0-2 3-2 3 0v5-7c0-2 3-2 3 0v7-6c0-2 3-2 3 0v6-4c0-2 3-2 3 0v7l2-2c2-2 4 1 2 3l-6 7H9c-4-2-7-5-7-9 0-2 2-3 3 0Z"/></symbol>
+    <symbol id="i-fist" viewBox="0 0 24 24"><path d="M3 10V7c0-2 3-2 3 0v2-4c0-2 3-2 3 0v4-5c0-2 3-2 3 0v5-3c0-2 3-2 3 0v3-1c0-2 3-2 3 0v4l3-2v6l-6 6H7l-4-6z"/></symbol>
+    <symbol id="i-workday" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="M8 5V3m8 2V3M3 9h18M7 13h3m4 0h3m-10 4h3m4 0h3"/></symbol>
+    <symbol id="i-bubbles" viewBox="0 0 24 24"><circle cx="8" cy="8" r="4"/><circle cx="16.5" cy="7" r="2.5"/><circle cx="15" cy="15" r="5"/><circle cx="6" cy="17" r="2"/><path d="M6.5 6.5c.8-.8 1.7-1 2.5-.6M13 13c1-1.2 2.3-1.5 3.5-1"/></symbol>
+    <symbol id="i-glass" viewBox="0 0 24 24"><path d="m12 2 8 5-2 10-6 5-7-6L4 7zM12 2l-1 8 7 7m-7-7-6 6m6-6 9-3"/></symbol>
+    <symbol id="i-buddy" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 22c0-5 2.5-8 7-8s7 3 7 8M9.5 8h.1m4.8 0h.1M10 10.5c1.2.8 2.8.8 4 0"/></symbol>
+    <symbol id="i-swarm" viewBox="0 0 24 24"><ellipse cx="12" cy="13" rx="4" ry="6"/><path d="M9 8 6 5m9 3 3-3M8 11H3m13 0h5M8 15H2m14 0h6M9 18l-4 3m10-3 4 3M12 7v12"/></symbol>
+    <symbol id="i-theme" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-1-.2-2-.5-2.8A7 7 0 0 1 12 3Z"/><path d="M17.5 3.5v3m-1.5-1.5h3"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.4 2.3c-.8.4-1.1.9-1.1 1.7m0 3.5h.01"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <header class="header">
+      <a class="brand" href="index.html" aria-label="Unwind home"><span class="brand-mark">u<span>✳</span></span>unwind<span class="beta">PLAYGROUND</span></a>
+      <div class="header-right"><span class="free-note"><span></span>Free to play. Yours to enjoy.</span><div class="toggles header-toggles" id="display-controls"><button id="sound" class="setting" aria-pressed="true"><svg><use href="#i-sound"/></svg><span>Sound on</span></button><span class="tiny-divider"></span><button id="quiet" class="setting" aria-pressed="false"><svg><use href="#i-leaf"/></svg><span>Gentle mode</span></button><span class="tiny-divider"></span><button id="theme" class="setting" aria-pressed="false"><svg><use href="#i-theme"/></svg><span>Dark mode</span></button></div><button class="icon-button" id="help" aria-label="How to play"><svg><use href="#i-help"/></svg></button></div>
+    </header>
+    <main>
+      <section class="intro">
+        <div><div class="eyebrow">LESS THINKING. MORE PLAYING.</div><h1>Leave a little <em>lighter.</em></h1><p>A little room to let go. Make a mess. Start fresh. Repeat.</p></div>
+        <div class="intro-note"><svg><use href="#i-leaf"/></svg><span>No goals. No pressure.<br>Just a moment for you.</span></div>
+      </section>
+      <section class="playground" aria-label="Interactive stress-buster game">
+        <div class="playground-header">
+          <div class="scene-tabs" role="tablist" aria-label="Choose your playground">
+            <button class="scene-tab active" data-scene="desktop" role="tab" aria-selected="true"><span><svg><use href="#i-workday"/></svg></span> The workday</button>
+            <button class="scene-tab" data-scene="bubbles" role="tab" aria-selected="false"><span><svg><use href="#i-bubbles"/></svg></span> Bubble wrap</button>
+            <button class="scene-tab" data-scene="glass" role="tab" aria-selected="false"><span><svg><use href="#i-glass"/></svg></span> Glass garden</button>
+            <button class="scene-tab" data-scene="buddy" role="tab" aria-selected="false"><span><svg><use href="#i-buddy"/></svg></span> Vent buddy</button>
+            <button class="scene-tab" data-scene="swarm" role="tab" aria-selected="false"><span><svg><use href="#i-swarm"/></svg></span> Bug swarm</button>
+          </div>
+          <div class="capture-actions"><button class="text-button" id="capture"><svg><use href="#i-expand"/></svg>Use my screen</button><button class="text-button upload-button" id="upload"><svg><use href="#i-image"/></svg>Load screenshot</button><button class="text-button" id="forget" hidden>Clear snapshot</button></div><button class="text-button" id="edit-buddy" hidden>Customize buddy</button>
+          <input type="file" id="image-input" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div class="stage" id="stage">
+          <canvas id="canvas" tabindex="0" aria-label="Destruction playground. Click or drag to play. Keyboard: arrow keys move the target, Space uses the tool, number keys, B and G select tools, R resets."></canvas>
+          <div class="stage-top"><span class="live-label"><i></i><span id="scene-label">THE WORKDAY</span></span><span class="safe-label">A snapshot only. Your real files stay safe.</span></div>
+          <div class="capture-empty" id="capture-empty"><svg><use href="#i-expand"/></svg><h2>Your screen. Your playground.</h2><p>Turn your actual screen into a destructible replica.</p><button class="reset-button" id="capture-start">Use my screen <svg><use href="#i-arrow"/></svg></button><p class="capture-privacy">One still image, kept in memory. No uploads. No real damage.<br>Hide private information before you capture.</p></div>
+          <div class="stage-caption" id="stage-caption"><span></span></div>
+          <div class="stage-bottom"><span id="action-label">Click to smash · hold & drag to let it out</span><button id="fullscreen" class="stage-icon" aria-label="Enter fullscreen"><svg><use href="#i-expand"/></svg></button></div>
+        </div>
+        <div class="control-deck">
+          <div class="tool-group" aria-label="Choose a tool">
+            <button class="tool active" data-tool="hammer" aria-pressed="true"><span class="tool-icon tool-thumb"><img src="assets/thumbs/electric-hammer.png" alt=""></span><span>Hammer</span><kbd>1</kbd></button>
+            <button class="tool" data-tool="laser" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/laser-pistol.png" alt=""></span><span>Laser</span><kbd>2</kbd></button>
+            <button class="tool" data-tool="paint" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/paintball-marker.png" alt=""></span><span>Paintball gun</span><kbd>3</kbd></button>
+            <button class="tool" data-tool="vortex" aria-pressed="false"><span class="tool-icon"><svg><use href="#i-vortex"/></svg></span><span>Gravity</span><kbd>4</kbd></button>
+            <button class="tool" data-tool="chainsaw" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/chainsaw-realistic.png" alt=""></span><span>Chainsaw</span><kbd>5</kbd></button>
+            <button class="tool" data-tool="gun" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/machine-gun-realistic.png" alt=""></span><span>Machine gun</span><kbd>6</kbd></button>
+            <button class="tool" data-tool="flame" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/flamethrower-realistic.png" alt=""></span><span>Flamethrower</span><kbd>7</kbd></button>
+            <button class="tool" data-tool="stamp" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/stamp-realistic.png" alt=""></span><span>Stamp</span><kbd>8</kbd></button>
+            <button class="tool" data-tool="termites" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/termite-box-realistic.png" alt=""></span><span>Termites</span><kbd>9</kbd></button>
+            <button class="tool" data-tool="washer" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/washer-blaster.png" alt=""></span><span>Restore Potion</span><kbd>0</kbd></button>
+            <button class="tool" data-tool="bat" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/baseball-bat-realistic.png" alt=""></span><span>Baseball bat</span><kbd>B</kbd></button>
+            <button class="tool" data-tool="grenade" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/grenade-realistic.png" alt=""></span><span>Grenade</span><kbd>G</kbd></button>
+            <button class="tool" data-tool="slap" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/slap-hand-realistic.png" alt=""></span><span>Slap</span><kbd>S</kbd></button>
+            <button class="tool" data-tool="punch" aria-pressed="false"><span class="tool-icon tool-thumb"><img src="assets/thumbs/boxing-gloves-realistic.png" alt=""></span><span>Punch</span><kbd>P</kbd></button>
+          </div>
+          <div class="deck-divider"></div>
+          <div class="intensity"><label for="intensity">A little <span>↔</span> A lot</label><input id="intensity" type="range" min="1" max="3" step="1" value="2" aria-label="Tool intensity"></div>
+          <button class="reset-button" id="reset"><svg><use href="#i-reset"/></svg>Fresh start<kbd>R</kbd></button>
+        </div>
+      </section>
+      <div class="under-game"><div class="session-status"><strong id="use-count">Hammer · 0 uses</strong><span id="session-note" aria-live="polite">Nothing to win. Everything to let go.</span></div></div>
+      <footer><span class="footer-brand">A small escape, whenever you need one.</span><span>Offline-ready <i>·</i> No ads <i>·</i> No accounts <i>·</i> Always free <i>·</i> <a href="about.html">About &amp; licensing</a></span></footer>
+    </main>
+  </div>
+  <dialog id="help-dialog"><button class="close-dialog icon-button" aria-label="Close help">×</button><span class="eyebrow">WELCOME TO YOUR LITTLE ESCAPE</span><h2>Permission to make a mess.</h2><p>Pick a playground, choose a tool, then click or drag. Everything here is pretend — your desktop and files stay untouched.</p><div class="help-grid"><div><strong>Hammer / 1</strong><span>Break things into satisfying little pieces.</span></div><div><strong>Laser / 2</strong><span>Cut a glowing path through the clutter.</span></div><div><strong>Paintball gun / 3</strong><span>Fire bright paint splats across the scene.</span></div><div><strong>Gravity / 4</strong><span>Pull everything into your own tiny orbit.</span></div></div><p class="small">R: fresh start · F: fullscreen · M: sound · Escape: exit fullscreen. On the focused playground, use arrow keys and Space to play without a mouse. Gentle mode reduces motion and softens the sound.</p><button id="start-playing" class="reset-button">Let’s play <svg><use href="#i-arrow"/></svg></button></dialog>
+  <div id="toast" role="status"></div>
+  <template id="classic-help"><div><strong>Chainsaw / 5</strong><span>Saw a narrow path through the surface.</span></div><div><strong>Machine gun / 6</strong><span>Hold to scatter rapid bullet holes.</span></div><div><strong>Flamethrower / 7</strong><span>Scorch the surface; linger to burn through.</span></div><div><strong>Stamp / 8</strong><span>Leave an emphatic rubber-stamp message.</span></div><div><strong>Termites / 9</strong><span>Release tiny nibblers that last 14 seconds.</span></div><div><strong>Restore Potion / 0</strong><span>Wash paint into flowing color, remove termites, and restore the surface.</span></div><div><strong>Baseball bat / B</strong><span>Swing a wide arc and send fragments flying.</span></div><div><strong>Grenade / G</strong><span>Throw, wait for the fuse, then watch the replica burst.</span></div></template>
+  <dialog id="screen-dialog"><h2>Choose your screen.</h2><p>The app will briefly minimize to capture your desktop. Hide anything private first. Only a still image is kept in memory.</p><label for="screen-choice">Screen</label><select id="screen-choice"></select><div class="capture-actions"><button class="text-button" id="screen-cancel">Cancel</button><button class="reset-button" id="screen-confirm">Capture screen</button></div></dialog>
+  <dialog id="buddy-dialog"><button class="close-dialog icon-button" id="buddy-cancel" aria-label="Close character creator">×</button><span class="eyebrow">CREATE A FICTIONAL VENT BUDDY</span><h2>Make it yours.</h2><p>This is a playful dummy, never a real person. No photos, accounts, or uploads.</p><div class="buddy-form"><label>Name<input id="buddy-name" maxlength="18" value="Bop"></label><label>Skin tone<select id="buddy-skin"><option value="#8b5d3b">Deep</option><option value="#b97a56">Warm</option><option value="#d5a078">Tan</option><option value="#f0c4a0">Light</option></select></label><label>Shirt color<input id="buddy-shirt" type="color" value="#7f9d62"></label><label>Hair<select id="buddy-hair"><option value="crop">Crop</option><option value="wave">Wave</option><option value="spikes">Spikes</option><option value="none">None</option></select></label><label>Expression<select id="buddy-face"><option value="brave">Brave</option><option value="goofy">Goofy</option><option value="calm">Calm</option></select></label></div><button class="reset-button" id="buddy-save">Create buddy</button>
+  </dialog>
+</body>
+</html>
+
