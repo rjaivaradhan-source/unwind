@@ -2,6 +2,7 @@ const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
+const port = Number(process.env.PORT || 4173);
 const types = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.svg':'image/svg+xml' };
 http.createServer((req,res) => {
   let file;
@@ -14,4 +15,4 @@ http.createServer((req,res) => {
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control':'no-store' });
     res.end(data);
   });
-}).listen(4173, '127.0.0.1', () => console.log('Unwind is ready at http://127.0.0.1:4173'));
+}).listen(port, '127.0.0.1', () => console.log(`Unwind is ready at http://127.0.0.1:${port}`));
