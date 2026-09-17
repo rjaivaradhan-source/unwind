@@ -1,4 +1,5 @@
 (() => {
+  import('./tool3d.js?v=3d11').catch(error=>console.error('3D renderer failed to start',error));
   'use strict';
   const $ = (s) => document.querySelector(s);
   const canvas = $('#canvas'), ctx = canvas.getContext('2d'), stage = $('#stage');
@@ -408,7 +409,8 @@
     }bugs=bugs.filter(b=>b.life>0);
     if(flash>0){ctx.fillStyle=`rgba(255,255,235,${flash})`;ctx.fillRect(0,0,W,H);flash=Math.max(0,flash-dt);}
     ctx.restore();
-    if(pointer.inside)drawCursor(now);else window.unwind3D?.setVisible(false);
+    const persistent3D=Boolean(window.unwind3D?.has(state.tool));
+    if(pointer.inside||persistent3D)drawCursor(now);else window.unwind3D?.setVisible(false);
   }
   function drawCursor(now) {
     const {x,y}=pointer,t=now*.001,pressed=pointer.down;ctx.save();ctx.translate(x,y);const propScale=clamp(Math.min(W/980,H/500),.78,1.06),lookX=clamp((x/W-.5)*2+pointer.vx*.012,-1,1),lookY=clamp((y/H-.5)*2+pointer.vy*.01,-1,1),depth=1-Math.abs(lookX)*.22;ctx.transform(1,lookY*.16,-lookX*.3,1,lookX*8,lookY*5);ctx.scale(propScale*depth,propScale*(1-Math.abs(lookY)*.09));ctx.rotate(lookX*.13+pointer.vx*.0035);
@@ -418,7 +420,7 @@
     const cylinder=(x,y,w,h,front='#788a75',light='#dce8d7')=>{const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,'#43574a');g.addColorStop(.3,light);g.addColorStop(.7,front);g.addColorStop(1,'#35473d');ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(x,y,w,h,h/2);ctx.fill();ctx.strokeStyle='#2b3d32';ctx.stroke();};
     if(['laser','paint','gun','flame','washer'].includes(state.tool)){ctx.save();ctx.shadowColor='transparent';ctx.strokeStyle=pressed?'#fff':'#8eeeff';ctx.globalAlpha=pressed?.95:.72;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,pressed?14:18,0,6.283);ctx.stroke();for(let i=0;i<4;i++){const a=i*1.571,d=pressed?17:22;ctx.beginPath();ctx.moveTo(Math.cos(a)*d,Math.sin(a)*d);ctx.lineTo(Math.cos(a)*(d+7),Math.sin(a)*(d+7));ctx.stroke();}ctx.fillStyle=pressed?'#fff':'#8eeeff';ctx.beginPath();ctx.arc(0,0,2.5,0,6.283);ctx.fill();ctx.restore();}
     ctx.save();ctx.globalAlpha=.25;ctx.shadowColor='transparent';ctx.fillStyle='#1a251e';ctx.beginPath();ctx.ellipse(6,20,28,8,0,0,6.283);ctx.fill();ctx.restore();
-    const real3D=Boolean(window.unwind3D?.has(state.tool));window.unwind3D?.update({tool:state.tool,x,y,lookX,lookY,pressed,scale:propScale,visible:pointer.inside});if(real3D){ctx.restore();return;}
+    const real3D=Boolean(window.unwind3D?.has(state.tool));window.unwind3D?.update({tool:state.tool,x,y,lookX,lookY,pressed,scale:propScale,visible:pointer.inside||real3D});if(real3D){ctx.restore();return;}
     ctx.rotate((pressed?-.08:0)+Math.sin(t*2)*.015);
     if(state.tool==='hammer'){
       ctx.rotate(pressed?-.65:-.08);if(hammerPhoto){const size=164;ctx.shadowColor='#54bfff';ctx.shadowBlur=pressed?30:16;ctx.drawImage(hammerPhoto,-61,-54,size,size);ctx.shadowBlur=0;if(pressed){ctx.strokeStyle='#9ee4ff';ctx.lineWidth=1.5;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(rand(-24,18),rand(-22,18));ctx.lineTo(rand(-42,32),rand(-40,35));ctx.lineTo(rand(-56,48),rand(-52,48));ctx.stroke();}}}else{cylinder(-3,-1,8,34,'#8a613e','#d7b27b');box(-18,-15,35,15,7,'#83918a','#eef2e8','#4d5d55');line(ctx,-12,-11,12,-11,'#fff',2);}
@@ -470,7 +472,7 @@
   canvas.addEventListener('pointerleave',()=>{if(!pointer.down)pointer.inside=false;});
   window.addEventListener('blur',()=>{stop();pointer.inside=false;});document.addEventListener('visibilitychange',stop);
   function selectTool(tool) {
-    state.tool=tool;document.querySelectorAll('[data-tool]').forEach(b=>{b.classList.toggle('active',b.dataset.tool===tool);b.setAttribute('aria-pressed',String(b.dataset.tool===tool));});
+    state.tool=tool;if(window.unwind3D?.has(tool)){pointer.x=W*.5;pointer.y=H*.52;pointer.vx=0;pointer.vy=0;pointer.inside=true;}document.querySelectorAll('[data-tool]').forEach(b=>{b.classList.toggle('active',b.dataset.tool===tool);b.setAttribute('aria-pressed',String(b.dataset.tool===tool));});
     updateUseCounter();
     $('#action-label').textContent={hammer:'Click to smash · hold & drag to let it out',laser:'Hold & drag to carve a glowing path',paint:'Hold to fire bright paintballs',vortex:'Hold to pull the world into your orbit',chainsaw:'Hold & drag to saw through the surface',gun:'Hold to fire · drag to scatter bullet holes',flame:'Hold to scorch · linger to burn through',stamp:'Click to stamp · each click changes the message',termites:'Click to release termites · they nibble for 14 seconds',washer:'Hold & drag the Restore Potion to wash paint and rebuild the surface',bat:'Click to swing a wide arc',grenade:'Click to throw · the fuse lasts about 1.5 seconds',slap:'Click the buddy for a springy open-hand slap',punch:'Hold for alternating left-jab and right-cross combinations'}[tool];
   }

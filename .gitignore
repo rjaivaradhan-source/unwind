@@ -6,3 +6,4 @@ release/
 Thumbs.db
 verification/
 assets/3d/sources/
+.npm-cache/
