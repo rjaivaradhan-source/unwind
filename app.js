@@ -5,7 +5,7 @@
   const ink = '#42503c', colors = ['#f6aa8a','#e5c968','#a2b891','#96bcd0','#c0a6d3','#edacbc'];
   const state = { scene:'desktop', tool:'hammer', intensity:2, sound:true, gentle:matchMedia('(prefers-reduced-motion: reduce)').matches, hits:0, uses:{}, totalPops:0, layer:0, layerDamage:0 };
   let W=1000, H=480, dpr=1, tiles=[], bubbles=[], particles=[], marks=[], effects=[], glassShards=[], imported=null, snapshot=null, capturing=false, grenades=[], swarm=[], squishes=[], bugSprites=[];
-  let pointer={x:500,y:240,down:false,inside:false}, lastAction=0, lastFrame=0, audio=null, shake=0, flash=0, toastTimer, resizeTimer;
+  let pointer={x:500,y:240,down:false,inside:false,vx:0,vy:0,lastX:500,lastY:240}, lastAction=0, lastFrame=0, audio=null, shake=0, flash=0, toastTimer, resizeTimer;
   let paintColor=0, lastSound=0, audioBus=null, audioRoom=null, noiseBuffer=null;
   let originals=[], bugs=[];
   let buddy={name:'Bop',skin:'#8b5d3b',shirt:'#7f9d62',hair:'crop',face:'brave',x:0,y:0,vx:0,vy:0,rot:0,vrot:0,squash:0,hit:0}, buddyCreated=false, buddyChase={active:false,hidden:false,lastUse:0,message:0}, punchCombo=0;
@@ -408,16 +408,17 @@
     }bugs=bugs.filter(b=>b.life>0);
     if(flash>0){ctx.fillStyle=`rgba(255,255,235,${flash})`;ctx.fillRect(0,0,W,H);flash=Math.max(0,flash-dt);}
     ctx.restore();
-    if(pointer.inside)drawCursor(now);
+    if(pointer.inside)drawCursor(now);else window.unwind3D?.setVisible(false);
   }
   function drawCursor(now) {
-    const {x,y}=pointer,t=now*.001,pressed=pointer.down;ctx.save();ctx.translate(x,y);const propScale=clamp(Math.min(W/980,H/500),.78,1.06),lookX=clamp((x/W-.5)*2,-1,1),lookY=clamp((y/H-.5)*2,-1,1);ctx.transform(1,lookY*.075,-lookX*.13,1,0,0);ctx.scale(propScale*(1-Math.abs(lookX)*.08),propScale*(1-Math.abs(lookY)*.035));ctx.rotate(lookX*.055);
-    ctx.shadowColor='#17211966';ctx.shadowBlur=8;ctx.shadowOffsetX=5;ctx.shadowOffsetY=7;
+    const {x,y}=pointer,t=now*.001,pressed=pointer.down;ctx.save();ctx.translate(x,y);const propScale=clamp(Math.min(W/980,H/500),.78,1.06),lookX=clamp((x/W-.5)*2+pointer.vx*.012,-1,1),lookY=clamp((y/H-.5)*2+pointer.vy*.01,-1,1),depth=1-Math.abs(lookX)*.22;ctx.transform(1,lookY*.16,-lookX*.3,1,lookX*8,lookY*5);ctx.scale(propScale*depth,propScale*(1-Math.abs(lookY)*.09));ctx.rotate(lookX*.13+pointer.vx*.0035);
+    ctx.shadowColor='#111c1766';ctx.shadowBlur=10+Math.abs(lookX)*12;ctx.shadowOffsetX=7-lookX*15;ctx.shadowOffsetY=9+lookY*5;
     const poly=(pts,fill,stroke='#29382d')=>{ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}};
     const box=(x,y,w,h,d,front='#8ca06d',top='#c7d69d',side='#586c4d')=>{poly([[x,y],[x+d,y-d],[x+w+d,y-d],[x+w,y]],top);poly([[x+w,y],[x+w+d,y-d],[x+w+d,y+h-d],[x+w,y+h]],side);rr(ctx,x,y,w,h,3,front,'#314331');};
     const cylinder=(x,y,w,h,front='#788a75',light='#dce8d7')=>{const g=ctx.createLinearGradient(x,y,x+w,y);g.addColorStop(0,'#43574a');g.addColorStop(.3,light);g.addColorStop(.7,front);g.addColorStop(1,'#35473d');ctx.fillStyle=g;ctx.beginPath();ctx.roundRect(x,y,w,h,h/2);ctx.fill();ctx.strokeStyle='#2b3d32';ctx.stroke();};
     if(['laser','paint','gun','flame','washer'].includes(state.tool)){ctx.save();ctx.shadowColor='transparent';ctx.strokeStyle=pressed?'#fff':'#8eeeff';ctx.globalAlpha=pressed?.95:.72;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,pressed?14:18,0,6.283);ctx.stroke();for(let i=0;i<4;i++){const a=i*1.571,d=pressed?17:22;ctx.beginPath();ctx.moveTo(Math.cos(a)*d,Math.sin(a)*d);ctx.lineTo(Math.cos(a)*(d+7),Math.sin(a)*(d+7));ctx.stroke();}ctx.fillStyle=pressed?'#fff':'#8eeeff';ctx.beginPath();ctx.arc(0,0,2.5,0,6.283);ctx.fill();ctx.restore();}
     ctx.save();ctx.globalAlpha=.25;ctx.shadowColor='transparent';ctx.fillStyle='#1a251e';ctx.beginPath();ctx.ellipse(6,20,28,8,0,0,6.283);ctx.fill();ctx.restore();
+    const real3D=Boolean(window.unwind3D?.has(state.tool));window.unwind3D?.update({tool:state.tool,x,y,lookX,lookY,pressed,scale:propScale,visible:pointer.inside});if(real3D){ctx.restore();return;}
     ctx.rotate((pressed?-.08:0)+Math.sin(t*2)*.015);
     if(state.tool==='hammer'){
       ctx.rotate(pressed?-.65:-.08);if(hammerPhoto){const size=164;ctx.shadowColor='#54bfff';ctx.shadowBlur=pressed?30:16;ctx.drawImage(hammerPhoto,-61,-54,size,size);ctx.shadowBlur=0;if(pressed){ctx.strokeStyle='#9ee4ff';ctx.lineWidth=1.5;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(rand(-24,18),rand(-22,18));ctx.lineTo(rand(-42,32),rand(-40,35));ctx.lineTo(rand(-56,48),rand(-52,48));ctx.stroke();}}}else{cylinder(-3,-1,8,34,'#8a613e','#d7b27b');box(-18,-15,35,15,7,'#83918a','#eef2e8','#4d5d55');line(ctx,-12,-11,12,-11,'#fff',2);}
@@ -453,14 +454,15 @@
     }else if(state.tool==='punch'){
       const left=punchCombo%2===0;if(glovesPhoto){const sw=glovesPhoto.width/2,sh=glovesPhoto.height;const drawGlove=(side,ox,oy,active)=>{ctx.save();ctx.translate(ox,oy+(active&&pressed?-23:0));ctx.rotate(active&&pressed?(side?-.22:.22):(side?-.08:.08));ctx.drawImage(glovesPhoto,side?sw:0,0,sw,sh,-31,-41,62,69);ctx.restore();};drawGlove(0,left?-21:-38,left?-8:11,left);drawGlove(1,left?23:7,left?11:-8,!left);}else{const glove=(ox,oy,flip,active)=>{ctx.save();ctx.translate(ox,oy);ctx.scale(flip,1);ctx.rotate(active&&pressed?-.3:.12);const pg=ctx.createLinearGradient(-28,-30,30,27);pg.addColorStop(0,'#ff8c78');pg.addColorStop(.5,'#c93f45');pg.addColorStop(1,'#681f2a');rr(ctx,-26,-18,53,44,16,pg,'#461821');rr(ctx,-12,20,28,25,10,pg,'#461821');ctx.restore();};glove(left?2:-39,left?-3:10,left?1:-1,true);glove(left?-38:5,left?12:-5,left?-1:1,false);}
     }
+    ctx.save();ctx.globalCompositeOperation='screen';ctx.globalAlpha=.12+Math.abs(lookX)*.12;ctx.strokeStyle=lookX<0?'#7fe9ff':'#ffd2a1';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,48+Math.abs(lookX)*12,-1.2,.4);ctx.stroke();ctx.restore();
     ctx.restore();
   }
   function frame(now) {
     if(state.scene==='swarm'&&now-lastFrame<40){requestAnimationFrame(frame);return;}
     const dt=Math.min((now-lastFrame)/1000,.034)||.016;lastFrame=now;
-    if(!document.hidden){if(pointer.down)act(now);render(dt,now);}requestAnimationFrame(frame);
+    pointer.vx*=Math.pow(.84,dt*60);pointer.vy*=Math.pow(.84,dt*60);if(!document.hidden){if(pointer.down)act(now);render(dt,now);}requestAnimationFrame(frame);
   }
-  function updatePointer(event){const r=canvas.getBoundingClientRect();pointer.x=clamp(event.clientX-r.left,0,W);pointer.y=clamp(event.clientY-r.top,0,H);}
+  function updatePointer(event){const r=canvas.getBoundingClientRect(),nx=clamp(event.clientX-r.left,0,W),ny=clamp(event.clientY-r.top,0,H);pointer.vx=pointer.vx*.72+(nx-pointer.x)*.28;pointer.vy=pointer.vy*.72+(ny-pointer.y)*.28;pointer.lastX=pointer.x;pointer.lastY=pointer.y;pointer.x=nx;pointer.y=ny;}
   canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;initAudio();canvas.focus({preventScroll:true});updatePointer(e);pointer.down=true;pointer.inside=true;canvas.setPointerCapture(e.pointerId);paintColor++;lastAction=0;act(performance.now());});
   canvas.addEventListener('pointermove',e=>{updatePointer(e);pointer.inside=true;});
   const stop=()=>{pointer.down=false;};

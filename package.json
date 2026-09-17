@@ -32,10 +32,12 @@
       "about.html",
       "style.css",
       "app.js",
+      "tool3d.js",
       "desktop/**",
       "assets/**",
       "package.json",
       "LICENSE",
+      "THIRD_PARTY_ASSETS.md",
       "README.md"
     ],
     "win": {
@@ -65,6 +67,7 @@
     "electron-builder": "^26.15.3"
   },
   "dependencies": {
-    "electron-updater": "^6.6.2"
+    "electron-updater": "^6.6.2",
+    "three": "^0.180.0"
   }
 }

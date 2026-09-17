@@ -42,3 +42,4 @@ p{color:#566353}.eyebrow{color:#53624e;font-weight:800}.free-note,.intro-note{co
 [data-theme=dark] .brand-mark{background:linear-gradient(145deg,#ff643f2e,#31cdea2e);box-shadow:0 7px 20px #0008,inset 0 1px 0 #fff2}
 @media(max-width:760px){.brand-mark{width:42px;height:42px}.brand-mark img{width:51px;height:51px}}
 @media(prefers-reduced-motion:reduce){.brand-mark,.brand-name{transition:none}}
+.tool-3d-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;filter:drop-shadow(0 12px 12px #13201855)}
