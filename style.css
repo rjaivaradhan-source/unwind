@@ -43,3 +43,5 @@ p{color:#566353}.eyebrow{color:#53624e;font-weight:800}.free-note,.intro-note{co
 @media(max-width:760px){.brand-mark{width:42px;height:42px}.brand-mark img{width:51px;height:51px}}
 @media(prefers-reduced-motion:reduce){.brand-mark,.brand-name{transition:none}}
 .tool-3d-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none;filter:drop-shadow(0 12px 12px #13201855)}
+.stage::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:radial-gradient(circle at center,transparent 56%,rgba(12,20,17,.12) 100%);box-shadow:inset 0 0 42px rgba(17,29,24,.12)}
+.capture-empty{pointer-events:none;user-select:none}.capture-empty button{pointer-events:auto}

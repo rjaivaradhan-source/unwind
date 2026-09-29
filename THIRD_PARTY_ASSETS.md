@@ -23,3 +23,10 @@ Both models are rendered with Unwind's own scale, lighting, inertia, perspective
 
 The 3D renderer uses [Three.js](https://threejs.org/), distributed under the
 MIT License. Runtime modules are bundled locally so the game works offline.
+
+## User-supplied war hammer
+
+`assets/3d/tools/war-hammer.fbx` was supplied by the project owner in
+`war-hammer.zip`. The archive did not include author, source, or license
+information. Redistribution rights must be confirmed before publishing this
+asset in a public release.
