@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, desktopCapturer, screen } = require('electron');
+const { app, BrowserWindow, Menu, Notification, ipcMain, desktopCapturer, screen } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs');
 const { autoUpdater } = require('electron-updater');
@@ -41,7 +41,20 @@ function createWindow() {
   return win;
 }
 let updateState={status:'idle',version:app.getVersion(),message:'Ready to check for updates.'},updaterConfigured=false,updateWindow=null;
-function publishUpdate(win,patch){updateState={...updateState,...patch};if(win&&!win.isDestroyed())win.webContents.send('unwind:update-status',updateState);}
+let lastUpdateNotification='';
+function publishUpdate(win,patch){
+  updateState={...updateState,...patch};if(win&&!win.isDestroyed())win.webContents.send('unwind:update-status',updateState);
+  if(['available','downloaded'].includes(updateState.status)&&Notification.isSupported()){
+    const key=`${updateState.status}:${updateState.version}`;
+    if(key!==lastUpdateNotification){lastUpdateNotification=key;new Notification({title:updateState.status==='downloaded'?'Unwind update is ready':`Unwind ${updateState.version} is available`,body:updateState.status==='downloaded'?'Open Unwind and choose Restart and install.':'The update will download automatically.'}).show();}
+  }
+}
+function friendlyUpdateError(error){
+  const detail=String(error?.message||error||'');
+  if(/404|releases\.atom|latest\.yml/i.test(detail))return 'No published Unwind update is available yet. The release repository must contain a published release with latest.yml and the installer.';
+  if(/token|authentication|private/i.test(detail))return 'The update release could not be accessed. Confirm that the Unwind release repository is public.';
+  return 'The update service could not be reached. Check your connection and try again later.';
+}
 function configureUpdater(win){
   updateWindow=win;if(updaterConfigured||!app.isPackaged)return;updaterConfigured=true;autoUpdater.autoDownload=false;autoUpdater.autoInstallOnAppQuit=false;
   autoUpdater.on('checking-for-update',()=>publishUpdate(updateWindow,{status:'checking',message:'Checking GitHub Releases…'}));
@@ -49,7 +62,7 @@ function configureUpdater(win){
   autoUpdater.on('update-not-available',info=>publishUpdate(updateWindow,{status:'current',version:info.version,message:'You already have the latest version.'}));
   autoUpdater.on('download-progress',p=>publishUpdate(updateWindow,{status:'downloading',progress:Math.round(p.percent),message:`Downloading update… ${Math.round(p.percent)}%`}));
   autoUpdater.on('update-downloaded',info=>publishUpdate(updateWindow,{status:'downloaded',version:info.version,progress:100,message:'Update downloaded. Restart when you are ready.'}));
-  autoUpdater.on('error',error=>publishUpdate(updateWindow,{status:'error',message:`Update check failed: ${error.message}`}));
+  autoUpdater.on('error',error=>publishUpdate(updateWindow,{status:'error',message:friendlyUpdateError(error)}));
   setTimeout(()=>autoUpdater.checkForUpdates().catch(()=>{}),5000);
   setInterval(()=>autoUpdater.checkForUpdates().catch(()=>{}),4*60*60*1000);
 }
@@ -86,8 +99,8 @@ app.whenReady().then(() => {
     return next;
   });
   ipcMain.handle('unwind:update-state',event=>{trustedWindow(event);return updateState;});
-  ipcMain.handle('unwind:check-update',async event=>{const win=trustedWindow(event);if(!app.isPackaged){publishUpdate(win,{status:'development',message:'Update checks run in the installed app.'});return updateState;}await autoUpdater.checkForUpdates();return updateState;});
-  ipcMain.handle('unwind:download-update',async event=>{trustedWindow(event);await autoUpdater.downloadUpdate();return updateState;});
+  ipcMain.handle('unwind:check-update',async event=>{const win=trustedWindow(event);if(!app.isPackaged){publishUpdate(win,{status:'development',message:'Update checks run in the installed app.'});return updateState;}try{await autoUpdater.checkForUpdates();}catch(error){publishUpdate(win,{status:'error',message:friendlyUpdateError(error)});}return updateState;});
+  ipcMain.handle('unwind:download-update',async event=>{const win=trustedWindow(event);try{await autoUpdater.downloadUpdate();}catch(error){publishUpdate(win,{status:'error',message:friendlyUpdateError(error)});}return updateState;});
   ipcMain.handle('unwind:install-update',event=>{trustedWindow(event);if(updateState.status==='downloaded')setImmediate(()=>autoUpdater.quitAndInstall(false,true));return updateState;});
   Menu.setApplicationMenu(process.platform === 'darwin' ? Menu.buildFromTemplate([
     { label: 'Unwind', submenu: [{ role: 'about' }, { type: 'separator' }, { role: 'quit' }] },

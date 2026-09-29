@@ -1,6 +1,6 @@
 {
   "name": "unwind-playground",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A free, private desktop playground. Make a mess. Feel a little lighter.",
   "main": "desktop/main.cjs",
   "license": "MIT",

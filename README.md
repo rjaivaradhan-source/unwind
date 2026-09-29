@@ -74,7 +74,7 @@ git push origin main
 git push origin v1.5.0
 ```
 
-The included GitHub Actions workflow builds the Windows NSIS installer and uploads the installer, block map, and `latest.yml` update metadata to that release. All three files must remain attached to the release. Automatic updates apply to the installed NSIS edition; portable builds should be replaced manually.
+The public repository lets installed copies check for updates without GitHub accounts or access tokens. The included GitHub Actions workflow builds the Windows NSIS installer and uploads the installer, block map, and `latest.yml` metadata to the matching release in `rjaivaradhan-source/unwind`. All three files must remain attached to the release. Automatic updates apply to the installed NSIS edition; portable builds should be replaced manually.
 
 ## Next: HD upgrade
 
